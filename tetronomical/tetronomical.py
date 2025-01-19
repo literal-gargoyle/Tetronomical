@@ -2,6 +2,8 @@ import random
 import os
 import sys
 import subprocess
+import time
+import curses
 
 # Ensure windows-curses is installed on Windows
 if os.name == "nt":
@@ -24,13 +26,13 @@ SHAPES = [
     [[0, 0, 1], [1, 1, 1]],  # J
 ]
 COLORS = [
-curses.COLOR_CYAN,
-curses.COLOR_YELLOW,
-curses.COLOR_MAGENTA,
-curses.COLOR_GREEN,
-curses.COLOR_RED,
-curses.COLOR_BLUE,
-curses.COLOR_WHITE,
+    curses.COLOR_CYAN,
+    curses.COLOR_YELLOW,
+    curses.COLOR_MAGENTA,
+    curses.COLOR_GREEN,
+    curses.COLOR_RED,
+    curses.COLOR_BLUE,
+    curses.COLOR_WHITE,
 ]
 
 HIGH_SCORES_FILE = "highscores.txt"
@@ -183,6 +185,53 @@ def tetris(stdscr):
                 stdscr.getch()
                 break
 
+# Menu screen logic
+def show_menu(stdscr):
+    curses.curs_set(0)
+    stdscr.nodelay(0)
+    stdscr.clear()
+
+    logo = """
+▄▄▄█████▓▓█████▄▄▄█████▓ ██▀███   ▒█████   ███▄    █  ▒█████   ███▄ ▄███▓ ██▓ ▄████▄   ▄▄▄       ██▓    
+▓  ██▒ ▓▒▓█   ▀▓  ██▒ ▓▒▓██ ▒ ██▒▒██▒  ██▒ ██ ▀█   █ ▒██▒  ██▒▓██▒▀█▀ ██▒▓██▒▒██▀ ▀█  ▒████▄    ▓██▒    
+▒ ▓██░ ▒░▒███  ▒ ▓██░ ▒░▓██ ░▄█ ▒▒██░  ██▒▓██  ▀█ ██▒▒██░  ██▒▓██    ▓██░▒██▒▒▓█    ▄ ▒██  ▀█▄  ▒██░    
+░ ▓██▓ ░ ▒▓█  ▄░ ▓██▓ ░ ▒██▀▀█▄  ▒██   ██░▓██▒  ▐▌██▒▒██   ██░▒██    ▒██ ░██░▒▓▓▄ ▄██▒░██▄▄▄▄██ ▒██░    
+  ▒██▒ ░ ░▒████▒ ▒██▒ ░ ░██▓ ▒██▒░ ████▓▒░▒██░   ▓██░░ ████▓▒░▒██▒   ░██▒░██░▒ ▓███▀ ░ ▓█   ▓██▒░██████▒
+  ▒ ░░   ░░ ▒░ ░ ▒ ░░   ░ ▒▓ ░▒▓░░ ▒░▒░▒░ ░ ▒░   ▒ ▒ ░ ▒░▒░▒░ ░ ▒░   ░  ░░▓  ░ ░▒ ▒  ░ ▒▒   ▓▒█░░ ▒░▓  ░
+    ░     ░ ░  ░   ░      ░▒ ░ ▒░  ░ ▒ ▒░ ░ ░░   ░ ▒░  ░ ▒ ▒░ ░  ░      ░ ▒ ░  ░  ▒     ▒   ▒▒ ░░ ░ ▒  ░
+  ░         ░    ░        ░░   ░ ░ ░ ░ ▒     ░   ░ ░ ░ ░ ░ ▒  ░      ░    ▒ ░░          ░   ▒     ░ ░   
+            ░  ░           ░         ░ ░           ░     ░ ░         ░    ░  ░ ░            ░  ░    ░  ░
+                                                                             ░                          
+    """
+
+    stdscr.addstr(0, 0, logo)
+    stdscr.addstr(18, 0, "Press 'S' to Start, 'I' for Instructions, 'Q' to Quit")
+
+    while True:
+        key = stdscr.getch()
+        if key == ord('s'):
+            tetris(stdscr)
+            break
+        elif key == ord('i'):
+            show_instructions(stdscr)
+            break
+        elif key == ord('q'):
+            break
+
+# Instructions screen
+def show_instructions(stdscr):
+    stdscr.clear()
+    stdscr.addstr(0, 0, "Tetris Instructions:")
+    stdscr.addstr(2, 0, "Use the arrow keys to move the blocks.")
+    stdscr.addstr(3, 0, "Press 'Space' to rotate the blocks.")
+    stdscr.addstr(4, 0, "Clear lines to score points.")
+    stdscr.addstr(5, 0, "Press 'Q' to quit the game.")
+    stdscr.addstr(7, 0, "Press any key to go back to the menu...")
+    stdscr.refresh()
+    stdscr.getch()
+    show_menu(stdscr)
+
+# Main entry point
 if __name__ == "__main__":
-    curses.wrapper(tetris)
-    print("Thanks for playing tetromical!")
+    os.system('cls' if os.name == 'nt' else 'clear')
+    curses.wrapper(show_menu)
