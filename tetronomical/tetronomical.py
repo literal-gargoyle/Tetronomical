@@ -3,7 +3,6 @@ import os
 import sys
 import subprocess
 import time
-import curses
 
 # Ensure windows-curses is installed on Windows
 if os.name == "nt":
