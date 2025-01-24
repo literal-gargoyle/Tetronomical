@@ -12,6 +12,18 @@ if os.name == "nt":
         subprocess.check_call([sys.executable, "-m", "pip", "install", "windows-curses"])
         import curses
 
+if os.name == "darwin":
+    try:
+        import curses
+    except ImportError:
+        print("Please use python 3.10 or lower to run this program,\n the curses module is not available on python 3.11 or higher")
+
+if os.name =="posix":
+    try:
+        import curses
+    except ImportError:
+        print("Please use python 3.10 or lower to run this program,\n the curses module is not available on python 3.11 or higher")
+
 # Constants
 SCREEN_WIDTH = 10
 SCREEN_HEIGHT = 20
@@ -94,6 +106,7 @@ def save_high_scores(high_scores):
 
 # Tetris game logic
 def tetris(stdscr):
+    global score
     curses.curs_set(0)
     stdscr.nodelay(1)
     stdscr.timeout(300)
@@ -180,8 +193,10 @@ def tetris(stdscr):
                 high_scores.append(score)
                 save_high_scores(high_scores)
                 stdscr.addstr(SCREEN_HEIGHT // 2, SCREEN_WIDTH, "GAME OVER")
+                stdscr.addstr(SCREEN_HEIGHT // 2 + 1, SCREEN_WIDTH, f"Final Score: {score}")
                 stdscr.refresh()
                 stdscr.getch()
+                time.sleep(2)
                 break
 
 # Menu screen logic
@@ -189,6 +204,7 @@ def show_menu(stdscr):
     curses.curs_set(0)
     stdscr.nodelay(0)
     stdscr.clear()
+    stdscr.refresh()
 
     logo = """
 ▄▄▄█████▓▓█████▄▄▄█████▓ ██▀███   ▒█████   ███▄    █  ▒█████   ███▄ ▄███▓ ██▓ ▄████▄   ▄▄▄       ██▓    
@@ -204,7 +220,12 @@ def show_menu(stdscr):
     """
 
     stdscr.addstr(0, 0, logo)
-    stdscr.addstr(18, 0, "Press 'S' to Start, 'I' for Instructions, 'Q' to Quit")
+    height, width = stdscr.getmaxyx()
+    # Adjust the position of the text based on terminal size
+    stdscr.addstr(18, 0, "Press 'S' to Start")
+    stdscr.addstr(19, 0, "Press 'I' for Instructions")
+    stdscr.addstr(20, 0, "Press 'Q' to Quit")
+    stdscr.refresh()
 
     while True:
         key = stdscr.getch()
@@ -232,5 +253,17 @@ def show_instructions(stdscr):
 
 # Main entry point
 if __name__ == "__main__":
+    score = 0
     os.system('cls' if os.name == 'nt' else 'clear')
     curses.wrapper(show_menu)
+
+    
+    print(f"Your final score is: {score}")
+    PA = input(str("Do you want to play again? (Y/N, Then press enter): "))
+    if PA == "Y":
+        os.system('cls' if os.name == 'nt' else 'clear')
+        curses.wrapper(show_menu)
+    elif PA == "N":
+        print("Thank you for playing!")
+        
+    
