@@ -4,25 +4,65 @@ import sys
 import subprocess
 import time
 
+#                ▄████▄   ██▀███  ▓█████ ▓█████▄  ██▓▄▄▄█████▓  ██████
+#                ▒██▀ ▀█  ▓██ ▒ ██▒▓█   ▀ ▒██▀ ██▌▓██▒▓  ██▒ ▓▒▒██    ▒
+#                ▒▓█    ▄ ▓██ ░▄█ ▒▒███   ░██   █▌▒██▒▒ ▓██░ ▒░░ ▓██▄
+#                ▒▓▓▄ ▄██▒▒██▀▀█▄  ▒▓█  ▄ ░▓█▄   ▌░██░░ ▓██▓ ░   ▒   ██▒
+#                ▒ ▓███▀ ░░██▓ ▒██▒░▒████▒░▒████▓ ░██░  ▒██▒ ░ ▒██████▒▒
+#                ░ ░▒ ▒  ░░ ▒▓ ░▒▓░░░ ▒░ ░ ▒▒▓  ▒ ░▓    ▒ ░░   ▒ ▒▓▒ ▒ ░
+#                ░  ▒     ░▒ ░ ▒░ ░ ░  ░ ░ ▒  ▒  ▒ ░    ░    ░ ░▒  ░ ░
+#                ░          ░░   ░    ░    ░ ░  ░  ▒ ░  ░      ░  ░  ░
+#                ░ ░         ░        ░  ░   ░     ░                 ░
+#                ░                         ░
+
+#                   ██▓   ▓█████▄▄▄     ▓█████▄    ▓█████▄▓███████▒   █▓
+#                  ▓██▒   ▓█   ▒████▄   ▒██▀ ██▌   ▒██▀ ██▓█   ▓██░   █▒
+#                  ▒██░   ▒███ ▒██  ▀█▄ ░██   █▌   ░██   █▒███  ▓██  █▒░
+#                  ▒██░   ▒▓█  ░██▄▄▄▄██░▓█▄   ▌   ░▓█▄   ▒▓█  ▄ ▒██ █░░
+#                  ░██████░▒████▓█   ▓██░▒████▓    ░▒████▓░▒████▒ ▒▀█░
+#                   ░ ▒░▓  ░░ ▒░ ▒▒   ▓▒█░▒▒▓  ▒     ▒▒▓  ▒░░ ▒░ ░ ░ ▐░
+#                   ░ ░ ▒  ░░ ░  ░▒   ▒▒ ░░ ▒  ▒     ░ ▒  ▒ ░ ░  ░ ░ ░░
+#                     ░ ░     ░   ░   ▒   ░ ░  ░     ░ ░  ░   ░      ░░
+#                       ░  ░  ░  ░    ░  ░  ░          ░      ░  ░    ░
+#                                          ░          ░               ░
+#
+#
+# ██▓    ██▄▄▄█████▓█████ ██▀███  ▄▄▄      ██▓     ▄████ ▄▄▄      ██▀███   ▄████ ▒█████▓██   ██▓██▓   ▓█████
+#▓██▒   ▓██▓  ██▒ ▓▓█   ▀▓██ ▒ ██▒████▄   ▓██▒    ██▒ ▀█▒████▄   ▓██ ▒ ██▒██▒ ▀█▒██▒  ██▒██  ██▓██▒   ▓█   ▀
+#▒██░   ▒██▒ ▓██░ ▒▒███  ▓██ ░▄█ ▒██  ▀█▄ ▒██░   ▒██░▄▄▄▒██  ▀█▄ ▓██ ░▄█ ▒██░▄▄▄▒██░  ██▒▒██ ██▒██░   ▒███
+#▒██░   ░██░ ▓██▓ ░▒▓█  ▄▒██▀▀█▄ ░██▄▄▄▄██▒██░   ░▓█  ██░██▄▄▄▄██▒██▀▀█▄ ░▓█  ██▒██   ██░░ ▐██▓▒██░   ▒▓█  ▄
+#░██████░██░ ▒██▒ ░░▒████░██▓ ▒██▒▓█   ▓██░██████░▒▓███▀▒▓█   ▓██░██▓ ▒██░▒▓███▀░ ████▓▒░░ ██▒▓░██████░▒████▒
+#░ ▒░▓  ░▓   ▒ ░░  ░░ ▒░ ░ ▒▓ ░▒▓░▒▒   ▓▒█░ ▒░▓  ░░▒   ▒ ▒▒   ▓▒█░ ▒▓ ░▒▓░░▒   ▒░ ▒░▒░▒░  ██▒▒▒░ ▒░▓  ░░ ▒░ ░
+#░ ░ ▒  ░▒ ░   ░    ░ ░  ░ ░▒ ░ ▒░ ▒   ▒▒ ░ ░ ▒  ░ ░   ░  ▒   ▒▒ ░ ░▒ ░ ▒░ ░   ░  ░ ▒ ▒░▓██ ░▒░░ ░ ▒  ░░ ░  ░
+#  ░ ░   ▒ ░ ░        ░    ░░   ░  ░   ▒    ░ ░  ░ ░   ░  ░   ▒    ░░   ░░ ░   ░░ ░ ░ ▒ ▒ ▒ ░░   ░ ░     ░
+#    ░  ░░            ░  ░  ░          ░  ░   ░  ░     ░      ░  ░  ░          ░    ░ ░ ░ ░        ░  ░  ░  ░
+#                                  https:github.com/literal-gargoyle/                                      ░ #                        Imports used: Random, OS, SYS, TIME, SUBPROCESS, & Curses
+#
+
 # Ensure windows-curses is installed on Windows
 if os.name == "nt":
     try:
         import curses
     except ImportError:
-        subprocess.check_call([sys.executable, "-m", "pip", "install", "windows-curses"])
+        subprocess.check_call(
+            [sys.executable, "-m", "pip", "install", "windows-curses"])
         import curses
 
 if os.name == "darwin":
     try:
         import curses
     except ImportError:
-        print("Please use python 3.10 or lower to run this program,\n the curses module is not available on python 3.11 or higher")
+        print(
+            "Please use python 3.10 or lower to run this program,\n the curses module is not available on python 3.11 or higher"
+        )
 
-if os.name =="posix":
+if os.name == "posix":
     try:
         import curses
     except ImportError:
-        print("Please use python 3.10 or lower to run this program,\n the curses module is not available on python 3.11 or higher")
+        print(
+            "Please use python 3.10 or lower to run this program,\n the curses module is not available on python 3.11 or higher"
+        )
 
 # Constants
 SCREEN_WIDTH = 10
@@ -48,13 +88,16 @@ COLORS = [
 
 HIGH_SCORES_FILE = "highscores.txt"
 
+
 # Initialize the game board
 def create_board():
     return [[0 for _ in range(SCREEN_WIDTH)] for _ in range(SCREEN_HEIGHT)]
 
+
 # Rotate a shape clockwise
 def rotate_shape(shape):
     return [list(row) for row in zip(*shape[::-1])]
+
 
 # Check if a shape can move to a specific position
 def is_valid_position(board, shape, offset):
@@ -64,14 +107,12 @@ def is_valid_position(board, shape, offset):
             if cell:
                 new_x = offset_x + x
                 new_y = offset_y + y
-                if (
-                    new_x < 0
-                    or new_x >= SCREEN_WIDTH
-                    or new_y >= SCREEN_HEIGHT
-                    or (new_y >= 0 and board[new_y][new_x])
-                ):
+                if (new_x < 0 or new_x >= SCREEN_WIDTH
+                        or new_y >= SCREEN_HEIGHT
+                        or (new_y >= 0 and board[new_y][new_x])):
                     return False
     return True
+
 
 # Merge the shape into the board
 def merge_shape(board, shape, offset, color):
@@ -80,6 +121,7 @@ def merge_shape(board, shape, offset, color):
         for x, cell in enumerate(row):
             if cell:
                 board[offset_y + y][offset_x + x] = color
+
 
 # Clear completed lines and return the number of cleared lines
 def clear_lines(board):
@@ -91,20 +133,64 @@ def clear_lines(board):
             lines_cleared += 1
     return lines_cleared
 
-# Load high scores from a file
+
+# Update high score functions to include initials
+# Saves to a .txt file (highscores.txt)
 def load_high_scores():
     if not os.path.exists(HIGH_SCORES_FILE):
         return []
     with open(HIGH_SCORES_FILE, "r") as f:
-        return [int(line.strip()) for line in f]
+        scores = []
+        for line in f:
+            initials, score = line.strip().split(":")
+            scores.append((initials, int(score)))
+        return scores
 
-# Save high scores to a file
+
 def save_high_scores(high_scores):
     with open(HIGH_SCORES_FILE, "w") as f:
-        for score in high_scores:
-            f.write(f"{score}\n")
+        for initials, score in high_scores:
+            f.write(f"{initials}:{score}\n")
 
-# Tetris game logic
+
+# Instantly place the current shape
+def instant_place(board, shape, position):
+    x, y = position
+    while is_valid_position(board, shape, (x, y)):
+        y += 1
+    return (x, y - 1)
+
+
+# Game over logic with added initials input
+def game_over(stdscr, score):
+    global high_scores
+    stdscr.addstr(SCREEN_HEIGHT // 2, SCREEN_WIDTH, "GAME OVER")
+    stdscr.addstr(SCREEN_HEIGHT // 2 + 1, SCREEN_WIDTH,
+                  f"Final Score: {score}")
+    stdscr.addstr(SCREEN_HEIGHT // 2 + 3, SCREEN_WIDTH,
+                  "Enter your initials (3 letters):")
+    stdscr.refresh()
+
+    initials = ""
+    while len(initials) < 3:
+        key = stdscr.getch()
+        if key in range(65, 91) or key in range(97, 123):  # A-Z or a-z
+            initials += chr(key).upper()
+            stdscr.addstr(SCREEN_HEIGHT // 2 + 4, SCREEN_WIDTH, initials)
+            stdscr.refresh()
+    high_scores = load_high_scores()
+    # Save the score with initials
+    high_scores.append((initials, score))
+    high_scores = sorted(high_scores, key=lambda x: x[1], reverse=True)[:5]
+    save_high_scores(high_scores)
+
+    stdscr.addstr(SCREEN_HEIGHT // 2 + 6, SCREEN_WIDTH,
+                  "Press any key to return to the menu...")
+    stdscr.refresh()
+    stdscr.getch()
+
+
+# v1.1 updated teris game logic, added new gameOver screen /\ plus initals
 def tetris(stdscr):
     global score
     curses.curs_set(0)
@@ -137,21 +223,33 @@ def tetris(stdscr):
         for y, row in enumerate(current_shape):
             for x, cell in enumerate(row):
                 if cell:
-                    stdscr.addstr(current_position[1] + y, (current_position[0] + x) * 2, "[]", curses.color_pair(current_color))
+                    stdscr.addstr(current_position[1] + y,
+                                  (current_position[0] + x) * 2, "[]",
+                                  curses.color_pair(current_color))
+
+        # Display next shape
+        stdscr.addstr(0, SCREEN_WIDTH * 2 + 2, "Next:")
+        for y, row in enumerate(next_shape):
+            for x, cell in enumerate(row):
+                if cell:
+                    stdscr.addstr(1 + y, (SCREEN_WIDTH * 2 + 4 + x) * 2, "[]",
+                                  curses.color_pair(next_color))
 
         # Display score and high scores
-        stdscr.addstr(0, SCREEN_WIDTH * 2 + 2, f"Score: {score}")
-        stdscr.addstr(2, SCREEN_WIDTH * 2 + 2, "High Scores:")
-        for i, hs in enumerate(sorted(high_scores, reverse=True)[:5]):
-            stdscr.addstr(3 + i, SCREEN_WIDTH * 2 + 2, f"{i + 1}. {hs}")
+        stdscr.addstr(8, SCREEN_WIDTH * 2 + 2, f"Score: {score}")
+        stdscr.addstr(10, SCREEN_WIDTH * 2 + 2, "High Scores:")
+        for i, (initials, hs) in enumerate(high_scores):
+            stdscr.addstr(11 + i, SCREEN_WIDTH * 2 + 2,
+                          f"{i + 1}. {initials}: {hs}")
 
         # Display controls
-        stdscr.addstr(10, SCREEN_WIDTH * 2 + 2, "Controls:")
-        stdscr.addstr(11, SCREEN_WIDTH * 2 + 2, "Left: Arrow Left")
-        stdscr.addstr(12, SCREEN_WIDTH * 2 + 2, "Right: Arrow Right")
-        stdscr.addstr(13, SCREEN_WIDTH * 2 + 2, "Down: Arrow Down")
-        stdscr.addstr(14, SCREEN_WIDTH * 2 + 2, "Rotate: Space")
-        stdscr.addstr(15, SCREEN_WIDTH * 2 + 2, "Quit: Q")
+        stdscr.addstr(18, SCREEN_WIDTH * 2 + 2, "Controls:")
+        stdscr.addstr(19, SCREEN_WIDTH * 2 + 2, "Left: Arrow Left")
+        stdscr.addstr(20, SCREEN_WIDTH * 2 + 2, "Right: Arrow Right")
+        stdscr.addstr(21, SCREEN_WIDTH * 2 + 2, "Down: Arrow Down")
+        stdscr.addstr(22, SCREEN_WIDTH * 2 + 2, "Rotate: Space")
+        stdscr.addstr(23, SCREEN_WIDTH * 2 + 2, "Instant Place: Arrow Up")
+        stdscr.addstr(24, SCREEN_WIDTH * 2 + 2, "Quit: Q")
 
         stdscr.refresh()
 
@@ -169,6 +267,9 @@ def tetris(stdscr):
             new_position = [current_position[0], current_position[1] + 1]
             if is_valid_position(board, current_shape, new_position):
                 current_position = new_position
+        elif key == curses.KEY_UP:
+            current_position = instant_place(board, current_shape,
+                                             current_position)
         elif key == ord("q"):
             break
         elif key == ord(" "):
@@ -187,17 +288,14 @@ def tetris(stdscr):
             current_color = next_color
             next_shape = random.choice(SHAPES)
             next_color = random.randint(1, len(COLORS))
-            current_position = [SCREEN_WIDTH // 2 - len(current_shape[0]) // 2, 0]
+            current_position = [
+                SCREEN_WIDTH // 2 - len(current_shape[0]) // 2, 0
+            ]
 
             if not is_valid_position(board, current_shape, current_position):
-                high_scores.append(score)
-                save_high_scores(high_scores)
-                stdscr.addstr(SCREEN_HEIGHT // 2, SCREEN_WIDTH, "GAME OVER")
-                stdscr.addstr(SCREEN_HEIGHT // 2 + 1, SCREEN_WIDTH, f"Final Score: {score}")
-                stdscr.refresh()
-                stdscr.getch()
-                time.sleep(2)
+                game_over(stdscr, score)
                 break
+
 
 # Menu screen logic
 def show_menu(stdscr):
@@ -238,6 +336,7 @@ def show_menu(stdscr):
         elif key == ord('q'):
             break
 
+
 # Instructions screen
 def show_instructions(stdscr):
     stdscr.clear()
@@ -251,13 +350,13 @@ def show_instructions(stdscr):
     stdscr.getch()
     show_menu(stdscr)
 
-# Main entry point
+
 if __name__ == "__main__":
     score = 0
     os.system('cls' if os.name == 'nt' else 'clear')
     curses.wrapper(show_menu)
 
-    
+
     print(f"Your final score is: {score}")
     PA = input(str("Do you want to play again? (Y/N, Then press enter): "))
     if PA == "Y":
@@ -265,5 +364,5 @@ if __name__ == "__main__":
         curses.wrapper(show_menu)
     elif PA == "N":
         print("Thank you for playing!")
-        
+
     
